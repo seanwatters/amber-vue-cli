@@ -3,7 +3,7 @@ const write = require('write');
 const exec = require('child_process').exec;
 
 const api = (model, attributes) => {
-  exec(`npm run vue-api ${model} ${attributes}`, () => {
+  exec(`amber g api ${model} ${attributes}`, () => {
     console.log('\nAPI Generated')
     exec(`amber db migrate`, () => {
       console.log('\nDB Migration Complete')
