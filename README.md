@@ -1,1 +1,1 @@
-Development tool for Amber with Vue
+A development tool for the Amber with Vue.js recipe.
