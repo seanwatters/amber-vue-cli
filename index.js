@@ -40,49 +40,92 @@ export default {
   console.log('\nComponent Created')
 };
 
-inquirer.prompt([
-  {
-    type: 'list',
-    message: 'Select generator',
-    name: 'generator',
-    choices: [
-      {
-        name: 'scaffold'
-      },
-      {
-        name: 'component'
-      },
-      {
-        name: 'api'
-      }
-    ]
-  }
-])
-.then(answers => {
-  switch(answers.generator) {
-    case 'scaffold':
-      inquirer.prompt([
+vue_tools = () => {
+  inquirer.prompt([
+    {
+      type: 'list',
+      message: 'Select generator',
+      name: 'generator',
+      choices: [
         {
-          type: 'input',
-          name: 'component_name',
-          message: "Component Name: "
+          name: 'scaffold'
         },
         {
-          type: 'input',
-          name: 'component_state',
-          message: "Component State: "
+          name: 'component'
         },
         {
-          type: 'input',
-          name: 'component_props',
-          message: "Component Props: "
+          name: 'api'
         }
-      ])
-      .then(answers => {
-        component(answers.component_name,
-                   answers.component_state,
-                   answers.component_props)
+      ]
+    }
+  ])
+  .then(answers => {
+    switch(answers.generator) {
+      case 'scaffold':
+        inquirer.prompt([
+          {
+            type: 'input',
+            name: 'component_name',
+            message: "Component Name: "
+          },
+          {
+            type: 'input',
+            name: 'component_state',
+            message: "Component State: "
+          },
+          {
+            type: 'input',
+            name: 'component_props',
+            message: "Component Props: "
+          }
+        ])
+        .then(answers => {
+          component(answers.component_name,
+                     answers.component_state,
+                     answers.component_props)
 
+          inquirer.prompt([
+            {
+              type: 'input',
+              name: 'model',
+              message: "model: "
+            },
+            {
+              type: 'input',
+              name: 'attributes',
+              message: "attributes: "
+            }
+          ])
+          .then(answers => {
+            api(answers.model, answers.attributes)
+          })
+        })
+        break;
+      case 'component':
+        inquirer.prompt([
+          {
+            type: 'input',
+            name: 'component_name',
+            message: "Component Name: "
+          },
+          {
+            type: 'input',
+            name: 'component_state',
+            message: "Component State: "
+          },
+          {
+            type: 'input',
+            name: 'component_props',
+            message: "Component Props: "
+          }
+        ])
+        .then(answers => {
+          componenet(answers.component_name,
+                     answers.component_state,
+                     answers.component_props)
+        })
+        break;
+      case 'api':
         inquirer.prompt([
           {
             type: 'input',
@@ -98,51 +141,12 @@ inquirer.prompt([
         .then(answers => {
           api(answers.model, answers.attributes)
         })
-      })
-      break;
-    case 'component':
-      inquirer.prompt([
-        {
-          type: 'input',
-          name: 'component_name',
-          message: "Component Name: "
-        },
-        {
-          type: 'input',
-          name: 'component_state',
-          message: "Component State: "
-        },
-        {
-          type: 'input',
-          name: 'component_props',
-          message: "Component Props: "
-        }
-      ])
-      .then(answers => {
-        componenet(answers.component_name,
-                   answers.component_state,
-                   answers.component_props)
-      })
-      break;
-    case 'api':
-      inquirer.prompt([
-        {
-          type: 'input',
-          name: 'model',
-          message: "model: "
-        },
-        {
-          type: 'input',
-          name: 'attributes',
-          message: "attributes: "
-        }
-      ])
-      .then(answers => {
-        api(answers.model, answers.attributes)
-      })
-      break;
-    default:
-      generator()
-      break;
-  }
-});
+        break;
+      default:
+        generator()
+        break;
+    }
+  });
+}
+
+exports.vue_tools
