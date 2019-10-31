@@ -4,14 +4,8 @@ const path = require('path');
 const write = require('write');
 const exec = require('child_process').exec;
 
-const api = (model, attributes) => {
-  exec(`amber generate api ${model} ${attributes}`, () => {
-    console.log('\nAPI Generated')
-  });
-};
-
 const component = (name, state = null, props = null) => {
-  let testPath = path.join(__dirname, '../../frontend-vue/dev/templates/component.vue');
+  let templatePath = path.join(__dirname, '../../frontend-vue/dev/templates/component.vue');
   fs.readFile(testPath, {encoding: 'utf-8'}, (err, data) => {
     if (!err && !data.replace(/\s/g, '').length == 0) {
       write.sync(`frontend-vue/src/components/${name}.vue`, data, { overwrite: false })
@@ -23,6 +17,40 @@ const component = (name, state = null, props = null) => {
   })
 }
 
+const scaffold = (model, attributes) => {
+  let newTemplatePath = path.join(__dirname, '../../frontend-vue/dev/templates/scaffold/new.vue');
+  let editTemplatePath = path.join(__dirname, '../../frontend-vue/dev/templates/scaffold/edit.vue');
+  let indexTemplatePath = path.join(__dirname, '../../frontend-vue/dev/templates/scaffold/index.vue');
+  let showTemplatePath = path.join(__dirname, '../../frontend-vue/dev/templates/scaffold/show.vue');
+
+  const readWrite = (templatePath, type) => {
+    fs.readFile(templatePath, {encoding: 'utf-8'}, (err, data) => {
+      if (!err && !data.replace(/\s/g, '').length == 0) {
+        write.sync(`frontend-vue/src/views/${model}/${type}.vue`, data, { overwrite: false })
+        console.log('componenet created with template')
+      } else {
+        write.sync(`frontend-vue/src/views/${model}/${type}.vue`, '', { overwrite: false })
+        console.log('created without componenet template')
+      }
+    })
+  }
+  readWrite(newTemplatePath, 'new');
+  readWrite(editTemplatePath, 'edit');
+  readWrite(indexTemplatePath, 'index');
+  readWrite(showTemplatePath, 'show');
+
+  api(model, attributes)
+}
+
+const api = (model, attributes) => {
+  exec(`amber g api ${model} ${attributes}`, () => {
+    console.log('\nAPI Generated')
+    exec(`amber db migrate`, () => {
+      console.log('\nDB Migration Complete')
+    });
+  });
+};
+
 module.exports.vue_tools = () => {
   inquirer.prompt([
     {
@@ -31,10 +59,10 @@ module.exports.vue_tools = () => {
       name: 'generator',
       choices: [
         {
-          name: 'scaffold'
+          name: 'component'
         },
         {
-          name: 'component'
+          name: 'scaffold'
         },
         {
           name: 'api'
@@ -44,46 +72,6 @@ module.exports.vue_tools = () => {
   ])
   .then(answers => {
     switch(answers.generator) {
-      case 'scaffold':
-        inquirer.prompt([
-          {
-            type: 'input',
-            name: 'component_name',
-            message: "Component Name: "
-          },
-          {
-            type: 'input',
-            name: 'component_state',
-            message: "Component State: "
-          },
-          {
-            type: 'input',
-            name: 'component_props',
-            message: "Component Props: "
-          }
-        ])
-        .then(answers => {
-          component(answers.component_name,
-                     answers.component_state,
-                     answers.component_props)
-
-          inquirer.prompt([
-            {
-              type: 'input',
-              name: 'model',
-              message: "model: "
-            },
-            {
-              type: 'input',
-              name: 'attributes',
-              message: "attributes: "
-            }
-          ])
-          .then(answers => {
-            api(answers.model, answers.attributes)
-          })
-        })
-        break;
       case 'component':
         inquirer.prompt([
           {
@@ -103,9 +91,24 @@ module.exports.vue_tools = () => {
           }
         ])
         .then(answers => {
-          component(answers.component_name,
-                     answers.component_state,
-                     answers.component_props)
+          component(answers.component_name, answers.component_state, answers.component_props)
+        })
+        break;
+      case 'scaffold':
+        inquirer.prompt([
+          {
+            type: 'input',
+            name: 'model',
+            message: "model: "
+          },
+          {
+            type: 'input',
+            name: 'attributes',
+            message: "attributes: "
+          }
+        ])
+        .then(answers => {
+          scaffold(answers.model, answers.attributes)
         })
         break;
       case 'api':
