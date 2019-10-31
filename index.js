@@ -40,7 +40,7 @@ export default {
   console.log('\nComponent Created')
 };
 
-vue_tools = () => {
+module.exports.vue_tools = () => {
   inquirer.prompt([
     {
       type: 'list',
@@ -148,5 +148,3 @@ vue_tools = () => {
     }
   });
 }
-
-exports.vue_tools
