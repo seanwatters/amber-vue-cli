@@ -1,6 +1,6 @@
 {
   "name": "amber-vue-cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A development tool for the Amber with Vue.js recipe.",
   "main": "index.js",
   "scripts": {
