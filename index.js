@@ -1,47 +1,27 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
+const path = require('path');
 const write = require('write');
 const exec = require('child_process').exec;
 
 const api = (model, attributes) => {
-  exec(`amber g api ${model} ${attributes}`, () => {
+  exec(`amber generate api ${model} ${attributes}`, () => {
     console.log('\nAPI Generated')
-    exec(`amber db migrate`, () => {
-      console.log('\nDB Migration Complete')
-    });
   });
 };
 
 const component = (name, state = null, props = null) => {
-  write.sync(`frontend-vue/src/components/${name}.vue`, `<template>
-  <div class=${name}>
-    <h3>I am ${name}!</h3>
-  </div>
-</template>
-
-<script>
-export default {
-  name: '${name}',
-  ${state ? `data() {
-    someState: null
-  }` : ``}
-  ${props ? `props: {
-    someProp: String
-  }` : ``}
+  let testPath = path.join(__dirname, '../../frontend-vue/dev/templates/component.vue');
+  fs.readFile(testPath, {encoding: 'utf-8'}, (err, data) => {
+    if (!err && !data.replace(/\s/g, '').length == 0) {
+      write.sync(`frontend-vue/src/components/${name}.vue`, data, { overwrite: false })
+      console.log('componenet created with template')
+    } else {
+      write.sync(`frontend-vue/src/components/${name}.vue`, '', { overwrite: false })
+      console.log('created without componenet template')
+    }
+  })
 }
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .${name} {
-
-  }
-  h3 {
-    margin: 40px 0 0;
-    font-weight: lighter;
-  }
-</style>`, { overwrite: false });
-  console.log('\nComponent Created')
-};
 
 module.exports.vue_tools = () => {
   inquirer.prompt([
@@ -123,7 +103,7 @@ module.exports.vue_tools = () => {
           }
         ])
         .then(answers => {
-          componenet(answers.component_name,
+          component(answers.component_name,
                      answers.component_state,
                      answers.component_props)
         })
