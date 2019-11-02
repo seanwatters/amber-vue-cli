@@ -8,7 +8,7 @@ const component = (name, state = null, props = null) => {
   let templatePath = path.join(__dirname, '../../frontend-vue/dev/templates/component.vue');
   fs.readFile(templatePath, {encoding: 'utf-8'}, (err, data) => {
     if (!err && !data.replace(/\s/g, '').length == 0) {
-      write.sync(`frontend-vue/src/components/${name}.vue`, data, { overwrite: false })
+      write.sync(`frontend-vue/src/components/${name}.vue`, data.replace(/comp_name/g, name), { overwrite: false })
       console.log('componenet created with template')
     } else {
       write.sync(`frontend-vue/src/components/${name}.vue`, '', { overwrite: false })
@@ -26,7 +26,7 @@ const scaffold = (model, attributes) => {
   const readWrite = (templatePath, type) => {
     fs.readFile(templatePath, {encoding: 'utf-8'}, (err, data) => {
       if (!err && !data.replace(/\s/g, '').length == 0) {
-        write.sync(`frontend-vue/src/views/${model}/${type}.vue`, data, { overwrite: false })
+        write.sync(`frontend-vue/src/views/${model}/${type}.vue`, data.replace(/comp_name/g, name), { overwrite: false })
         console.log('componenet created with template')
       } else {
         write.sync(`frontend-vue/src/views/${model}/${type}.vue`, '', { overwrite: false })
