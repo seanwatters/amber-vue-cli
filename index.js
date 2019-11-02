@@ -6,7 +6,7 @@ const exec = require('child_process').exec;
 
 const component = (name, state = null, props = null) => {
   let templatePath = path.join(__dirname, '../../frontend-vue/dev/templates/component.vue');
-  fs.readFile(testPath, {encoding: 'utf-8'}, (err, data) => {
+  fs.readFile(templatePath, {encoding: 'utf-8'}, (err, data) => {
     if (!err && !data.replace(/\s/g, '').length == 0) {
       write.sync(`frontend-vue/src/components/${name}.vue`, data, { overwrite: false })
       console.log('componenet created with template')
