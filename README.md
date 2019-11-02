@@ -65,7 +65,7 @@ This will generate a file in the `frontend-react/src/components/`:
     |- index.js
 ```
 
-_keep in mind that this is not a substitution for [Vue.js devtools](https://github.com/vuejs/vue-devtools), but is a suplimental tool for development with **Amber with Vue**.
+_keep in mind that this is not a substitution for [Vue.js devtools](https://github.com/vuejs/vue-devtools), but is a suplimental tool for development with **Amber with Vue**._
 
 ## License
 
