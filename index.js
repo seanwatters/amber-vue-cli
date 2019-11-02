@@ -55,7 +55,7 @@ module.exports.vue_tools = () => {
   inquirer.prompt([
     {
       type: 'list',
-      message: 'Select generator',
+      message: 'Select Generator',
       name: 'generator',
       choices: [
         {
